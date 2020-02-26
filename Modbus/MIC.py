@@ -68,7 +68,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -123,7 +123,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -173,7 +173,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -223,7 +223,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -290,7 +290,7 @@ class MIC1:
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -350,7 +350,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -400,7 +400,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -450,7 +450,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (received_data[0] != serial.to_bytes(self.__Address)):
             print("Transmitting error: Data corrupted")
             return Data_error
     

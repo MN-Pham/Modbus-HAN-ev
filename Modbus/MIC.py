@@ -293,7 +293,7 @@ class MIC1:
         print(received_data[0])
         print(self.__Address)
         
-        if (('0123456789ABCDEF'[int(ord(received_data))]) != self.__Address):
+        if (('0123456789ABCDEF'[int(ord(received_data[0]))]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
         

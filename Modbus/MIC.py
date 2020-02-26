@@ -290,6 +290,9 @@ class MIC1:
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
         
+        print(received_data[0])
+        print(self.__Address)
+        
         if (received_data[0] != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error

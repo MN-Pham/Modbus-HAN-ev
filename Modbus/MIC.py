@@ -7,10 +7,14 @@ from time import sleep
 #This library is made for reading MIC/MIC2 energy meter with a MAX485 module
 
 #UART configuration
-#8-bit data, no parity, 1 stop bit, 19200 BAUD
+#MIC2: 8-bit data, no parity, 1 stop bit, 19200 BAUD
+#ser = serial.Serial("/dev/ttyS0", 9200)
+
+#MIC1: 8-bit data, no parity, 1 stop bit, 38400 BAUD
 ser = serial.Serial("/dev/ttyS0", 38400)
 
 #return code:
+Data_error  = -3
 CRC_error   = -2
 Trans_error = -1
 No_error    = 0
@@ -57,12 +61,17 @@ class MIC2:
                 data_left = ser.inWaiting()
             else:
                 print("Transmitting error: Time out")
-                return Trans_error;
+                return Trans_error
     
         received_data = ser.read()
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:15]))
         
@@ -76,10 +85,10 @@ class MIC2:
             self.__V1 = struct.unpack('f', received_data[6:2:-1])[0]
             self.__V2 = struct.unpack('f', received_data[10:6:-1])[0]
             self.__V3 = struct.unpack('f', received_data[14:10:-1])[0]
-            return No_error;
+            return No_error
         else:
             print("Transmitting error: Incorrect CRC")
-            return CRC_error;
+            return CRC_error
             
     def readPhaseCurrent(self):
         #Calculate CRC16-MODBUS
@@ -113,6 +122,10 @@ class MIC2:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:15]))
@@ -159,6 +172,10 @@ class MIC2:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:15]))
@@ -205,6 +222,10 @@ class MIC2:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:7]))
@@ -260,7 +281,7 @@ class MIC1:
                 data_left = ser.inWaiting()
             else:
                 print("Transmitting error: Time out")
-                return Trans_error;
+                return Trans_error
     
         received_data = ser.read()
         sleep(0.01)
@@ -269,6 +290,11 @@ class MIC1:
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
         
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        
+        #DEBUG ONLY-----------------------------------------------
         retval = ""
         for character in received_data:
             retval += ('0123456789ABCDEF'[int(ord(character)/16)])
@@ -276,6 +302,7 @@ class MIC1:
             retval += ':'
         print (retval[:-1])
         print (crc_cal) #use for debugging only
+        #---------------------------------------------------------
     
         crc_Rx = hex(struct.unpack('H',received_data[9:])[0])
     
@@ -285,10 +312,10 @@ class MIC1:
             self.__V1 = struct.unpack('H', received_data[4:2:-1])[0]
             self.__V2 = struct.unpack('H', received_data[6:4:-1])[0]
             self.__V3 = struct.unpack('H', received_data[8:6:-1])[0]
-            return No_error;
+            return No_error
         else:
             print("Transmitting error: Incorrect CRC")
-            return CRC_error;
+            return CRC_error
             
     def readPhaseCurrent(self):
         #Calculate CRC16-MODBUS
@@ -322,6 +349,10 @@ class MIC1:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
@@ -368,7 +399,11 @@ class MIC1:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
-    
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
         crc_Rx = hex(struct.unpack('H',received_data[9:])[0])
@@ -414,11 +449,15 @@ class MIC1:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
+        
+        if (received_data[0] != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:5]))
         crc_Rx = hex(struct.unpack('H',received_data[5:])[0])
-    
+        
         if crc_cal == crc_Rx:
             self.__F = struct.unpack('f', received_data[4:2:-1])[0]    
             return No_error

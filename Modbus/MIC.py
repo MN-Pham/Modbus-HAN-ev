@@ -68,7 +68,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -123,7 +123,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -173,7 +173,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -223,7 +223,7 @@ class MIC2:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -287,24 +287,23 @@ class MIC1:
         sleep(0.01)
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
-        #Check the CRC code
-        crc_cal = hex(crc16(received_data[:9]))
         
-        print(received_data[0])
-        print(self.__Address)
-        
+        #Check if the data is correct
         if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
         
+        #Check the CRC code
+        crc_cal = hex(crc16(received_data[:9]))
+
         #DEBUG ONLY-----------------------------------------------
-        retval = ""
-        for character in received_data:
-            retval += ('0123456789ABCDEF'[int(ord(character)/16)])
-            retval += ('0123456789ABCDEF'[int(ord(character)%16)])
-            retval += ':'
-        print (retval[:-1])
-        print (crc_cal) #use for debugging only
+        #retval = ""
+        #for character in received_data:
+        #    retval += ('0123456789ABCDEF'[int(ord(character)/16)])
+        #    retval += ('0123456789ABCDEF'[int(ord(character)%16)])
+        #    retval += ':'
+        #print (retval[:-1])
+        #print (crc_cal) #use for debugging only
         #---------------------------------------------------------
     
         crc_Rx = hex(struct.unpack('H',received_data[9:])[0])
@@ -353,7 +352,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
     
@@ -403,7 +402,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -453,7 +452,7 @@ class MIC1:
         data_left = ser.inWaiting()
         received_data += ser.read(data_left)
         
-        if (received_data[0] != self.__Address):
+        if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
     

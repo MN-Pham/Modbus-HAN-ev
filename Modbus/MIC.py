@@ -253,6 +253,7 @@ class MIC1:
         self.__P1 = 0
         self.__P2 = 0
         self.__P3 = 0
+        self.__F  = 0
         
     def readPhaseVoltage(self):
         #Calculate CRC16-MODBUS

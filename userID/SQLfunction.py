@@ -5,13 +5,14 @@ import paho.mqtt.publish as publish
 import paho.mqtt.subscribe as subscribe
 
 con = None
-broker = "192.168.43.249"
+broker = "broker.hivemq.com"
+#broker = "192.168.43.249"
 
 path = "./userList"
-con = lite.connect(path)
-cur = con.cursor()
 
 def SendUser_callback(client, userdata, message):
+    con = lite.connect(path)
+    cur = con.cursor()
     cur.execute('select * from list')
 
     data = cur.fetchall()
@@ -25,6 +26,8 @@ def SendUser_callback(client, userdata, message):
     #print(dataSend)
 
 def Update_callback(client, userdata, message):
+    con = lite.connect(path)
+    cur = con.cursor()
     data = message.payload
     index = []
     for i in range(len(data)):

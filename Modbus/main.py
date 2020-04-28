@@ -8,6 +8,7 @@ import paho.mqtt.subscribe as subscribe
 import sqlite3 as lite
 import sys
 import os
+broker = "broker.hivemq.com"
 path = "./modbusData.db"
 con = lite.connect(path)
 cur = con.cursor()
@@ -130,7 +131,7 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter1 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter2 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter2._MIC1__V1, meter2._MIC1__V2, meter2._MIC1__V3,
                  meter2._MIC1__I1, meter2._MIC1__I2, meter2._MIC1__I3,
@@ -179,7 +180,7 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter1 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter3 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter3._MIC1__V1, meter3._MIC1__V2, meter3._MIC1__V3,
                  meter3._MIC1__I1, meter3._MIC1__I2, meter3._MIC1__I3,
@@ -228,7 +229,7 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter1 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter4 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter4._MIC1__V1, meter4._MIC1__V2, meter4._MIC1__V3,
                  meter4._MIC1__I1, meter4._MIC1__I2, meter4._MIC1__I3,
@@ -277,12 +278,31 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter1 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter5 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter5._MIC1__V1, meter5._MIC1__V2, meter5._MIC1__V3,
                  meter5._MIC1__I1, meter5._MIC1__I2, meter5._MIC1__I3,
                  meter5._MIC1__P1, meter5._MIC1__P2, meter5._MIC1__P3,
                  meter5._MIC1__F))        
+    #Send data to broker
+    dataSend = ""
+    cur.execute("SELECT * FROM meter1 ORDER BY No DESC LIMIT 1")
+    data = cur.fetchone()
+    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')   
+    cur.execute("SELECT * FROM meter2 ORDER BY No DESC LIMIT 1")
+    data = cur.fetchone()
+    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+    cur.execute("SELECT * FROM meter3 ORDER BY No DESC LIMIT 1")
+    data = cur.fetchone()
+    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+    cur.execute("SELECT * FROM meter4 ORDER BY No DESC LIMIT 1")
+    data = cur.fetchone()
+    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+    cur.execute("SELECT * FROM meter5 ORDER BY No DESC LIMIT 1")
+    data = cur.fetchone()
+    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+    
+    publish.single("EnergyMeter", dataSend, hostname=broker)
     
     time.sleep(10)
     

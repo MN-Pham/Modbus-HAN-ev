@@ -39,13 +39,40 @@ def Update_callback(client, userdata, message):
     StartTime = int(data[index[1]+1:index[2]])
     cur.execute("UPDATE list SET PendingCharger=? WHERE Id=?", (PendingCharger, UserId))
     cur.execute("UPDATE list SET StartTime=? WHERE Id=?", (StartTime, UserId))
-    
+
+def photonMeasure_callback(client, userdata, message):
+    con = lite.connect(path)
+    cur = con.cursor()
+    data = message.payload
+    index = []
+    for i in range(len(data)):
+        if (data[i] == '%'):
+            index.append(i)
+    V1 = float(data[:index[0]])
+    V2 = float(data[index[0]+1:index[1]])
+    V3 = float(data[index[1]+1:index[2]])
+    I1 = float(data[index[2]+1:index[3]])
+    I2 = float(data[index[3]+1:index[4]])
+    I3 = float(data[index[4]+1:index[5]])
+    P = float(data[index[5]+1:index[6]])
+    E = float(data[index[6]+1:index[7]])
+    F = float(data[index[7]+1:index[8]])
+    Time = int(data[index[8]+1:index[9]])
+    SocketID = int(data[index[9]+1:index[10]])
+    UserID = int(data[index[10]+1:index[11]])
+    cur.execute("INSERT INTO photonMeasure(UserID, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                (UserID, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time))
+
 #setup mqtt
 client = mqtt.Client()
 client.connect(broker, 1883, 60)
 client.loop_start()
 client.subscribe("getUsers")
+client.subscribe("UpdateUser")
+client.subscribe("photonMeasure")
 client.message_callback_add("getUsers", SendUser_callback)
+client.message_callback_add("UpdateUser", Update_callback)
+client.message_callback_add("photonMeasure", photonMeasure_callback)
    
 while True:
     time.sleep(1)

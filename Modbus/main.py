@@ -9,7 +9,8 @@ import sqlite3 as lite
 import sys
 import os
 broker = "broker.hivemq.com"
-path = "./modbusData.db"
+#path = "./modbusData.db" #Use internal memory
+path = "/meida/usb/modbusData.db" #Use external memory
 con = lite.connect(path)
 cur = con.cursor()
 
@@ -27,7 +28,7 @@ GPIO.setup(control_pin, GPIO.OUT)
 
 #Announcement
 print("Program was written by P.M.Nhat")
-print("ver 1.6")
+print("ver 2.0")
 print("MODBUS converter: MAX485")
 print("MODBUS slave: MIC1")
 

@@ -36,10 +36,99 @@ print("MODBUS slave: MIC1")
 #meter1 = MIC.MIC2(0x01, control_pin)
 
 meter1 = MIC.MIC1(0x01, control_pin)
+readingPT1 = meter1.readPT1()
+while (readingPT1 != 0):
+    print("Measuring failed. Error code: " + str(readingPT1))
+    print("Trying again...")
+    readingPT1 = meter1.readPT1()
+
+readingPT2 = meter1.readPT2()
+while (readingPT2 != 0):
+    print("Measuring failed. Error code: " + str(readingPT2))
+    print("Trying again...")
+    readingPT2 = meter1.readPT2()
+
+readingCT1 = meter1.readCT1()
+while (readingCT1 != 0):
+    print("Measuring failed. Error code: " + str(readingCT1))
+    print("Trying again...")
+    readingCT1 = meter1.readCT1()
+
 meter2 = MIC.MIC1(0x02, control_pin)
+readingPT1 = meter2.readPT1()
+while (readingPT1 != 0):
+    print("Measuring failed. Error code: " + str(readingPT1))
+    print("Trying again...")
+    readingPT1 = meter2.readPT1()
+
+readingPT2 = meter2.readPT2()
+while (readingPT2 != 0):
+    print("Measuring failed. Error code: " + str(readingPT2))
+    print("Trying again...")
+    readingPT2 = meter2.readPT2()
+
+readingCT1 = meter2.readCT1()
+while (readingCT1 != 0):
+    print("Measuring failed. Error code: " + str(readingCT1))
+    print("Trying again...")
+    readingCT1 = meter2.readCT1()
+
 meter3 = MIC.MIC1(0x03, control_pin)
+readingPT1 = meter3.readPT1()
+while (readingPT1 != 0):
+    print("Measuring failed. Error code: " + str(readingPT1))
+    print("Trying again...")
+    readingPT1 = meter3.readPT1()
+
+readingPT2 = meter3.readPT2()
+while (readingPT2 != 0):
+    print("Measuring failed. Error code: " + str(readingPT2))
+    print("Trying again...")
+    readingPT2 = meter3.readPT2()
+
+readingCT1 = meter3.readCT1()
+while (readingCT1 != 0):
+    print("Measuring failed. Error code: " + str(readingCT1))
+    print("Trying again...")
+    readingCT1 = meter3.readCT1()
+
 meter4 = MIC.MIC1(0x04, control_pin)
+readingPT1 = meter4.readPT1()
+while (readingPT1 != 0):
+    print("Measuring failed. Error code: " + str(readingPT1))
+    print("Trying again...")
+    readingPT1 = meter4.readPT1()
+
+readingPT2 = meter4.readPT2()
+while (readingPT2 != 0):
+    print("Measuring failed. Error code: " + str(readingPT2))
+    print("Trying again...")
+    readingPT2 = meter4.readPT2()
+
+readingCT1 = meter4.readCT1()
+while (readingCT1 != 0):
+    print("Measuring failed. Error code: " + str(readingCT1))
+    print("Trying again...")
+    readingCT1 = meter4.readCT1()
+
 meter5 = MIC.MIC1(0x05, control_pin)
+readingPT1 = meter5.readPT1()
+while (readingPT1 != 0):
+    print("Measuring failed. Error code: " + str(readingPT1))
+    print("Trying again...")
+    readingPT1 = meter5.readPT1()
+
+readingPT2 = meter5.readPT2()
+while (readingPT2 != 0):
+    print("Measuring failed. Error code: " + str(readingPT2))
+    print("Trying again...")
+    readingPT2 = meter5.readPT2()
+
+readingCT1 = meter5.readCT1()
+while (readingCT1 != 0):
+    print("Measuring failed. Error code: " + str(readingCT1))
+    print("Trying again...")
+    readingCT1 = meter5.readCT1()
 
 #count to send new data after 1 min
 time_send = 1

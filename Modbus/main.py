@@ -9,8 +9,8 @@ import sqlite3 as lite
 import sys
 import os
 broker = "broker.hivemq.com"
-#path = "./modbusData.db" #Use internal memory
-path = "/meida/usb/modbusData.db" #Use external memory
+path = "./modbusData.db" #Use internal memory
+#path = "/meida/usb/modbusData.db" #Use external memory
 con = lite.connect(path)
 cur = con.cursor()
 
@@ -40,6 +40,9 @@ meter2 = MIC.MIC1(0x02, control_pin)
 meter3 = MIC.MIC1(0x03, control_pin)
 meter4 = MIC.MIC1(0x04, control_pin)
 meter5 = MIC.MIC1(0x05, control_pin)
+
+#count to send new data after 1 min
+time_send = 1
 
 while True:
     print("E1:")
@@ -83,13 +86,13 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter1 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter1(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter1._MIC1__V1, meter1._MIC1__V2, meter1._MIC1__V3,
                  meter1._MIC1__I1, meter1._MIC1__I2, meter1._MIC1__I3,
                  meter1._MIC1__P1, meter1._MIC1__P2, meter1._MIC1__P3,
                  meter1._MIC1__F))
-    
+    con.commit()
     #Read meter 2----------------------------------------------
     print("E2:")
     #Read PHASE VOLTAGE
@@ -132,13 +135,13 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter2 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter2(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter2._MIC1__V1, meter2._MIC1__V2, meter2._MIC1__V3,
                  meter2._MIC1__I1, meter2._MIC1__I2, meter2._MIC1__I3,
                  meter2._MIC1__P1, meter2._MIC1__P2, meter2._MIC1__P3,
                  meter2._MIC1__F))
-    
+    con.commit()
     #Read meter 3----------------------------------------------
     print("E3:")
     #Read PHASE VOLTAGE
@@ -181,13 +184,13 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter3 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter3(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter3._MIC1__V1, meter3._MIC1__V2, meter3._MIC1__V3,
                  meter3._MIC1__I1, meter3._MIC1__I2, meter3._MIC1__I3,
                  meter3._MIC1__P1, meter3._MIC1__P2, meter3._MIC1__P3,
                  meter3._MIC1__F))
-    
+    con.commit()
     #Read meter 4----------------------------------------------
     print("E4:")
     #Read PHASE VOLTAGE
@@ -230,13 +233,13 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter4 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter4(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter4._MIC1__V1, meter4._MIC1__V2, meter4._MIC1__V3,
                  meter4._MIC1__I1, meter4._MIC1__I2, meter4._MIC1__I3,
                  meter4._MIC1__P1, meter4._MIC1__P2, meter4._MIC1__P3,
                  meter4._MIC1__F))
-    
+    con.commit()
     #Read meter 5----------------------------------------------
     print("E5:")
     #Read PHASE VOLTAGE
@@ -279,31 +282,34 @@ while True:
         print(Message)
     else:
         print("Measuring failed. Error code: " + str(reading))
-    cur.execute("INSERT INTO meter5 VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+    cur.execute("INSERT INTO meter5(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (time.time(),
                  meter5._MIC1__V1, meter5._MIC1__V2, meter5._MIC1__V3,
                  meter5._MIC1__I1, meter5._MIC1__I2, meter5._MIC1__I3,
                  meter5._MIC1__P1, meter5._MIC1__P2, meter5._MIC1__P3,
-                 meter5._MIC1__F))        
-    #Send data to broker
-    dataSend = ""
-    cur.execute("SELECT * FROM meter1 ORDER BY No DESC LIMIT 1")
-    data = cur.fetchone()
-    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')   
-    cur.execute("SELECT * FROM meter2 ORDER BY No DESC LIMIT 1")
-    data = cur.fetchone()
-    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
-    cur.execute("SELECT * FROM meter3 ORDER BY No DESC LIMIT 1")
-    data = cur.fetchone()
-    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
-    cur.execute("SELECT * FROM meter4 ORDER BY No DESC LIMIT 1")
-    data = cur.fetchone()
-    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
-    cur.execute("SELECT * FROM meter5 ORDER BY No DESC LIMIT 1")
-    data = cur.fetchone()
-    dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+                 meter5._MIC1__F))
+    con.commit()
+    #Send data to broker after every 2*30=60s
+    if ((time_send%2)==0):
+        dataSend = ""
+        cur.execute("SELECT * FROM meter1 ORDER BY No DESC LIMIT 1")
+        data = cur.fetchone()
+        dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')   
+        cur.execute("SELECT * FROM meter2 ORDER BY No DESC LIMIT 1")
+        data = cur.fetchone()
+        dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+        cur.execute("SELECT * FROM meter3 ORDER BY No DESC LIMIT 1")
+        data = cur.fetchone()
+        dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+        cur.execute("SELECT * FROM meter4 ORDER BY No DESC LIMIT 1")
+        data = cur.fetchone()
+        dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
+        cur.execute("SELECT * FROM meter5 ORDER BY No DESC LIMIT 1")
+        data = cur.fetchone()
+        dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
     
-    publish.single("EnergyMeter", dataSend, hostname=broker)
-    
-    time.sleep(10)
+        publish.single("EnergyMeter", dataSend, hostname=broker)
+        
+    time_send += 1
+    time.sleep(30)
     

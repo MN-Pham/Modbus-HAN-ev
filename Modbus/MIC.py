@@ -380,7 +380,7 @@ class MIC1:
         #print (crc_Rx) #use for degugging only
     
         if crc_cal == crc_Rx:
-            self.__PT2 = float(struct.unpack('H', received_data[5:2:-1])[0])
+            self.__PT2 = float(struct.unpack('H', received_data[4:2:-1])[0])
             return No_error
         else:
             print("Transmitting error: Incorrect CRC")
@@ -443,7 +443,7 @@ class MIC1:
         #print (crc_Rx) #use for degugging only
     
         if crc_cal == crc_Rx:
-            self.__CT1 = float(struct.unpack('H', received_data[5:2:-1])[0])
+            self.__CT1 = float(struct.unpack('H', received_data[4:2:-1])[0])
             return No_error
         else:
             print("Transmitting error: Incorrect CRC")
@@ -648,12 +648,12 @@ class MIC1:
         received_data += ser.read(data_left)
         
         #DEBUG ONLY-----------------------------------------------
-        retval = ""
-        for character in received_data:
-            retval += ('0123456789ABCDEF'[int(ord(character)/16)])
-            retval += ('0123456789ABCDEF'[int(ord(character)%16)])
-            retval += ':'
-        print (retval[:-1])
+        #retval = ""
+        #for character in received_data:
+        #    retval += ('0123456789ABCDEF'[int(ord(character)/16)])
+        #    retval += ('0123456789ABCDEF'[int(ord(character)%16)])
+        #    retval += ':'
+        #print (retval[:-1])
         #print (crc_cal) #use for debugging only
         #---------------------------------------------------------
 

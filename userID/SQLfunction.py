@@ -8,8 +8,8 @@ con = None
 broker = "broker.hivemq.com"
 #broker = "192.168.43.249"
 
-path = "./userList" #Use internal memory
-#path = "/media/usb/userList" #Use externhal memory
+#path = "./userList" #Use internal memory
+path = "/media/usb/userList" #Use externhal memory
 
 def SendUser_callback(client, userdata, message):
     con = lite.connect(path)
@@ -23,7 +23,7 @@ def SendUser_callback(client, userdata, message):
         print(element)
         dataSend += (str(element[0])+'%'+element[1]+'%'+element[2]+'%'+str(element[3])+'%'+element[4]+'%'+str(element[5])+'%'+element[6]+'%'+str(element[7])+'%'+str(element[8])+'%')
 
-    publish.single("UserList", dataSend, hostname=broker)
+    publish.single("HANevse/UserList", dataSend, hostname=broker)
     #print(dataSend)
 
 def Update_callback(client, userdata, message):
@@ -67,12 +67,12 @@ def photonMeasure_callback(client, userdata, message):
 client = mqtt.Client()
 client.connect(broker, 1883, 60)
 client.loop_start()
-client.subscribe("getUsers")
-client.subscribe("UpdateUser")
-client.subscribe("photonMeasure")
-client.message_callback_add("getUsers", SendUser_callback)
-client.message_callback_add("UpdateUser", Update_callback)
-client.message_callback_add("photonMeasure", photonMeasure_callback)
+client.subscribe("HANevse/getUsers")
+client.subscribe("HANevse/UpdateUser")
+client.subscribe("HANevse/photonMeasure")
+client.message_callback_add("HANevse/getUsers", SendUser_callback)
+client.message_callback_add("HANevse/UpdateUser", Update_callback)
+client.message_callback_add("HANevse/photonMeasure", photonMeasure_callback)
    
 while True:
     time.sleep(1)

@@ -298,6 +298,9 @@ class MIC1:
         if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
+        if (len(received_data) != 9):
+            print("Transmitting error: Data corrupted")
+            return Data_error
         
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:7]))
@@ -361,6 +364,9 @@ class MIC1:
         if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
+        if (len(received_data) != 7):
+            print("Transmitting error: Data corrupted")
+            return Data_error
         
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:5]))
@@ -389,14 +395,14 @@ class MIC1:
     def readCT1(self):
         #Calculate CRC16-MODBUS
         crc16 = crcmod.mkCrcFun(0x18005, rev=True, initCrc = 0xFFFF, xorOut = 0x0000)
-        crc_Tx = ".%4x"%(crc16(serial.to_bytes([self.__Address, 0x03, 0x01, 0x07, 0x00, 0x01])))
+        crc_Tx = ".%4x"%(crc16(serial.to_bytes([self.__Address, 0x03, 0x01, 0x08, 0x00, 0x01])))
         #The crc_Tx must include 4 hexadecimal characters.
         #If crc_Tx =  10, function hex() will return 0xa, which is not expected
         #Therefore, String format operator was used
     
         #Send request
         GPIO.output(self.__Control, GPIO.HIGH)
-        ser.write(serial.to_bytes([self.__Address, 0x03, 0x01, 0x07, 0x00, 0x01, int(crc_Tx[3:],16), int(crc_Tx[1:3],16)]))
+        ser.write(serial.to_bytes([self.__Address, 0x03, 0x01, 0x08, 0x00, 0x01, int(crc_Tx[3:],16), int(crc_Tx[1:3],16)]))
     
         #There is a delay caused by the converter. The program must wait before reading the result
         sleep(0.01)
@@ -422,6 +428,9 @@ class MIC1:
         
         #Check if the data is correct
         if (ord(received_data[0]) != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        if (len(received_data) != 7):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -487,6 +496,9 @@ class MIC1:
         if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
+        if (len(received_data) != 11):
+            print("Transmitting error: Data corrupted")
+            return Data_error
         
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
@@ -550,6 +562,9 @@ class MIC1:
         if (ord(received_data[0]) != self.__Address):
             print("Transmitting error: Data corrupted")
             return Data_error
+        if (len(received_data) != 11):
+            print("Transmitting error: Data corrupted")
+            return Data_error
     
         #Check the CRC code
         crc_cal = hex(crc16(received_data[:9]))
@@ -598,6 +613,9 @@ class MIC1:
         received_data += ser.read(data_left)
         
         if (ord(received_data[0]) != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        if (len(received_data) != 11):
             print("Transmitting error: Data corrupted")
             return Data_error
         
@@ -658,6 +676,9 @@ class MIC1:
         #---------------------------------------------------------
 
         if (ord(received_data[0]) != self.__Address):
+            print("Transmitting error: Data corrupted")
+            return Data_error
+        if (len(received_data) != 7):
             print("Transmitting error: Data corrupted")
             return Data_error
     

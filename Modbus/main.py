@@ -9,8 +9,8 @@ import sqlite3 as lite
 import sys
 import os
 broker = "broker.hivemq.com"
-path = "./modbusData.db" #Use internal memory
-#path = "/meida/usb/modbusData.db" #Use external memory
+#path = "./modbusData.db" #Use internal memory
+path = "/media/usb/modbusData.db" #Use external memory
 con = lite.connect(path)
 cur = con.cursor()
 
@@ -93,7 +93,7 @@ while True:
         else:
             print("Measuring failed. Error code: " + str(reading))
         cur.execute("INSERT INTO meter1(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    (time.time(),
+                    (int(round(time.time())),
                      meter1._MIC1__V1, meter1._MIC1__V2, meter1._MIC1__V3,
                      meter1._MIC1__I1, meter1._MIC1__I2, meter1._MIC1__I3,
                      meter1._MIC1__P1, meter1._MIC1__P2, meter1._MIC1__P3,
@@ -150,7 +150,7 @@ while True:
         else:
             print("Measuring failed. Error code: " + str(reading))
         cur.execute("INSERT INTO meter2(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    (time.time(),
+                    (int(round(time.time())),
                      meter2._MIC1__V1, meter2._MIC1__V2, meter2._MIC1__V3,
                      meter2._MIC1__I1, meter2._MIC1__I2, meter2._MIC1__I3,
                      meter2._MIC1__P1, meter2._MIC1__P2, meter2._MIC1__P3,
@@ -207,7 +207,7 @@ while True:
         else:
             print("Measuring failed. Error code: " + str(reading))
         cur.execute("INSERT INTO meter3(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    (time.time(),
+                    (int(round(time.time())),
                      meter3._MIC1__V1, meter3._MIC1__V2, meter3._MIC1__V3,
                      meter3._MIC1__I1, meter3._MIC1__I2, meter3._MIC1__I3,
                      meter3._MIC1__P1, meter3._MIC1__P2, meter3._MIC1__P3,
@@ -264,7 +264,7 @@ while True:
         else:
             print("Measuring failed. Error code: " + str(reading))
         cur.execute("INSERT INTO meter4(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    (time.time(),
+                    (int(round(time.time())),
                      meter4._MIC1__V1, meter4._MIC1__V2, meter4._MIC1__V3,
                      meter4._MIC1__I1, meter4._MIC1__I2, meter4._MIC1__I3,
                      meter4._MIC1__P1, meter4._MIC1__P2, meter4._MIC1__P3,
@@ -321,7 +321,7 @@ while True:
         else:
             print("Measuring failed. Error code: " + str(reading))
         cur.execute("INSERT INTO meter5(Time, V1, V2, V3, I1, I2, I3, P1, P2, P3, F) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                    (time.time(),
+                    (int(round(time.time())),
                      meter5._MIC1__V1, meter5._MIC1__V2, meter5._MIC1__V3,
                      meter5._MIC1__I1, meter5._MIC1__I2, meter5._MIC1__I3,
                      meter5._MIC1__P1, meter5._MIC1__P2, meter5._MIC1__P3,
@@ -348,8 +348,8 @@ while True:
         data = cur.fetchone()
         dataSend += (str(data[2])+'%'+str(data[3])+'%'+str(data[4])+'%'+str(data[5])+'%'+str(data[6])+'%'+str(data[7])+'%'+str(data[8])+'%'+str(data[9])+'%'+str(data[10])+'%'+str(data[11])+'%'+str(data[1])+'%')
     
-        publish.single("EnergyMeter", dataSend, hostname=broker)
+        publish.single("HANevse/EnergyMeter", dataSend, hostname=broker)
         
     time_send += 1
-    time.sleep(30)
-    
+    #time.sleep(30)
+    time.sleep(1)

@@ -9,7 +9,7 @@ broker = "broker.hivemq.com"
 #broker = "192.168.43.249"
 
 #path = "./userList" #Use internal memory
-path = "/media/usb/userList" #Use externhal memory
+path = "/media/DATABASE/userList" #Use externhal memory
 
 def SendUser_callback(client, userdata, message):
     con = lite.connect(path)

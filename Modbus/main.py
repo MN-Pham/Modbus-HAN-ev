@@ -10,7 +10,7 @@ import sys
 import os
 broker = "broker.hivemq.com"
 #path = "./modbusData.db" #Use internal memory
-path = "/media/usb/modbusData.db" #Use external memory
+path = "/media/DATABASE/modbusData.db" #Use external memory
 con = lite.connect(path)
 cur = con.cursor()
 

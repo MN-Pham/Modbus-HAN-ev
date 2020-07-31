@@ -59,8 +59,8 @@ def photonMeasure_callback(client, userdata, message):
     F = float(data[index[7]+1:index[8]])
     Time = int(data[index[8]+1:index[9]])
     SocketID = int(data[index[9]+1:index[10]])
-    UserID = int(data[index[10]+1:index[11]])
-    cur.execute("INSERT INTO photonMeasure(UserID, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+    UserID = data[index[10]+1:index[11]]
+    cur.execute("INSERT INTO photonMeasure(UIDtag, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
                 (UserID, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time))
 
 #setup mqtt

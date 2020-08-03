@@ -39,6 +39,7 @@ def Update_callback(client, userdata, message):
     StartTime = int(data[index[1]+1:index[2]])
     cur.execute("UPDATE list SET PendingCharger=? WHERE Id=?", (PendingCharger, UserId))
     cur.execute("UPDATE list SET StartTime=? WHERE Id=?", (StartTime, UserId))
+    con.commmit()
 
 def photonMeasure_callback(client, userdata, message):
     con = lite.connect(path)
@@ -62,6 +63,7 @@ def photonMeasure_callback(client, userdata, message):
     UserID = data[index[10]+1:index[11]]
     cur.execute("INSERT INTO photonMeasure(UIDtag, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
                 (UserID, SocketID, V1, V2, V3, I1, I2, I3, P, E, F, Time))
+    con.commit()
 
 #setup mqtt
 client = mqtt.Client()
